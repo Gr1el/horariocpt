@@ -1,150 +1,129 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horário</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Reset de margens e padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>Lavagem de Dinheiro - GTA RP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #0f0;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      background-image: url('https://i.imgur.com/6rZK0oU.jpeg'); /* 🔁 TROQUE AQUI pela imagem que quiser */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
 
-        /* Estilo geral do corpo */
-        body {
-            font-family: 'Roboto', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #c72c41, #1e3a8a); /* Gradiente de vermelho e azul */
-            color: #fff;
-            overflow: hidden;
-            font-size: 18px;
-        }
+    .container {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 600px;
+      margin: auto;
+      margin-top: 50px;
+      box-shadow: 0 0 20px #000;
+    }
 
-        /* Container principal */
-        .container {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 20px;
-            padding: 40px 60px;
-            text-align: center;
-            backdrop-filter: blur(15px); /* Desfoque de fundo */
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            width: 80%;
-            max-width: 900px;
-            transition: all 0.3s ease;
-        }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
 
-        /* Logo */
-        .logo img {
-            width: 300px;
-            margin-bottom: 40px;
-            filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.5));
-            transition: all 0.5s ease-in-out;
-        }
+    button {
+      cursor: pointer;
+      background-color: #0f0;
+      color: #000;
+    }
 
-        .logo img:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 50px rgba(255, 255, 255, 1));
-        }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
 
-        /* Estilo da data */
-        .day {
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin: 20px 0;
-            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.5);
-            letter-spacing: 2px;
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
+    li {
+      margin: 8px 0;
+      background-color: #222;
+      padding: 10px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        /* Estilo do relógio */
-        .clock {
-            font-family: 'Ubuntu', sans-serif;
-            font-size: 8rem;
-            font-weight: 900;
-            letter-spacing: 5px;
-            text-shadow: 4px 4px 30px rgba(0, 0, 0, 0.8);
-            margin-top: 10px;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeIn 1s forwards 0.5s; /* Animar com atraso */
-        }
+    .remover {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        /* Animação do fade in */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* Efeito hover no relógio */
-        .clock:hover {
-            transform: scale(1.05);
-            color: #f7b733; /* Realce laranja suave ao passar o mouse */
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 40px;
-            }
-
-            .logo img {
-                width: 250px;
-            }
-
-            .day {
-                font-size: 2rem;
-            }
-
-            .clock {
-                font-size: 6rem;
-            }
-        }
-
-    </style>
+    h1, h2, h3 {
+      color: #0f0;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="https://i.imgur.com/qD35jXQ.png" alt="Logo da Empresa"> <!-- Substitua pela sua logo -->
-        </div>
-        <div class="day" id="dataCompleta"></div>
-        <div class="clock" id="horario"></div>
+  <div class="container">
+    <h1>💸 Lavagem de Dinheiro - GTA RP</h1>
+    <input type="number" id="valor" placeholder="Valor lavado (R$)">
+    <button onclick="adicionar()">Registrar</button>
+    <h2>Total Lavado: R$ <span id="total">0.00</span></h2>
+
+    <div id="registro">
+      <h3>Histórico:</h3>
+      <ul id="historico"></ul>
     </div>
+  </div>
 
-    <script>
-        function atualizarHorario() {
-            // Obtém o horário de Brasília
-            const options = { timeZone: 'America/Sao_Paulo', hour12: false };
-            const data = new Date().toLocaleString('pt-BR', options);
+  <script>
+    let total = 0;
+    let historico = [];
 
-            // Formatação da data e hora
-            const [dia, mes, ano, hora, minuto, segundo] = data.split(/[\s,\/:]+/);
-            const diaSemana = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
-            
-            // Mapeando o mês para o nome correto
-            const meses = [
-                "janeiro", "fevereiro", "março", "abril", "maio", "junho", 
-                "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-            ];
-            const nomeMes = meses[parseInt(mes) - 1]; // O mês vem como número, então é necessário ajustar para o nome
+    function atualizarTela() {
+      document.getElementById('total').textContent = total.toFixed(2);
+      const lista = document.getElementById('historico');
+      lista.innerHTML = '';
+      historico.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>+ R$ ${item.valor.toFixed(2)} (${item.data})</span>
+          <button class="remover" onclick="remover(${index})">❌</button>`;
+        lista.appendChild(li);
+      });
+    }
 
-            // Atualizando o conteúdo da data completa e do horário
-            document.getElementById('dataCompleta').innerText = `Hoje é ${diaSemana}, dia ${dia} de ${nomeMes} de ${ano}`;
-            document.getElementById('horario').innerText = `${hora}:${minuto}:${segundo}`;
-        }
+    function adicionar() {
+      const input = document.getElementById('valor');
+      const valor = parseFloat(input.value);
+      if (!isNaN(valor) && valor > 0) {
+        const registro = {
+          valor: valor,
+          data: new Date().toLocaleString()
+        };
+        historico.push(registro);
+        total += valor;
+        atualizarTela();
+        input.value = '';
+      } else {
+        alert('Digite um valor válido maior que zero!');
+      }
+    }
 
-        setInterval(atualizarHorario, 1000); // Atualiza o horário a cada segundo
-    </script>
+    function remover(index) {
+      if (confirm("Remover esse valor do histórico?")) {
+        total -= historico[index].valor;
+        historico.splice(index, 1);
+        atualizarTela();
+      }
+    }
+  </script>
 </body>
 </html>
